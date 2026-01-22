@@ -24,6 +24,11 @@ public class Program
         var sqlConnectionString = builder.Environment.IsProduction() ? builder.Configuration["SQLPRODUCTION"]!  : builder.Configuration["SQLCONNECTIONSTRING"]!;
 
 
+        builder.Services.AddApplicationInsightsTelemetry(options =>
+        {
+            options.ConnectionString = builder.Configuration["APPLICATIONINSIGHT"];
+        });
+
         // Add services to the container.
         builder.Services.AddControllers();
 
