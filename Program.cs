@@ -21,13 +21,15 @@ public class Program
 
         // Add to config from key-vault.
         builder.Configuration.AddAzureKeyVault(new Uri(builder.Configuration["KeyVault:Name"]!), new DefaultAzureCredential());
-        
+        var sqlConnectionString = builder.Environment.IsProduction() ? builder.Configuration["SQLPRODUCTION"]!  : builder.Configuration["SQLCONNECTIONSTRING"]!;
+
+
         // Add services to the container.
         builder.Services.AddControllers();
 
         // Add database context
         builder.Services.AddDbContext<GameContextCosmos>(options => options.UseCosmos(builder.Configuration["COSMOSENDPOINT"]!, builder.Configuration["COSMOSKEY"]!, databaseName: "GameDB"));
-        builder.Services.AddDbContext<GameContextSql>(options => options.UseSqlServer(builder.Configuration["SQLCONNECTIONSTRING"]!));
+        builder.Services.AddDbContext<GameContextSql>(options => options.UseSqlServer(sqlConnectionString));
 
         // Add services
         builder.Services.AddMapster();
