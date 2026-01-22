@@ -1,0 +1,6 @@
+@cosmosdb_test_HostAddress = http://localhost:5038
+
+GET {{cosmosdb_test_HostAddress}}/api/game?playerMove=stein/
+Accept: application/json
+
+###
