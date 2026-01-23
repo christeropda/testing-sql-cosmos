@@ -1,10 +1,10 @@
 ﻿using cosmosdb_test.Enums;
 
-namespace cosmosdb_test.Models;
+namespace cosmosdb_test.Repositories.Models;
 
-public class PlayedGame
+public class CompletedGameState
 {
-    public Guid Id { get; private set; } = Guid.NewGuid();
+    public Guid Id { get; set; }
     public Moves PlayerMove {  get; set; }
     public Moves MachineMove { get; set; }
     public Result MatchResult { get; set; }

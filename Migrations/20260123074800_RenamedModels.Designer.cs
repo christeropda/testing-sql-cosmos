@@ -12,8 +12,8 @@ using cosmosdb_test.Repositories.Context;
 namespace cosmosdb_test.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    [Migration("20260121084613_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260123074800_RenamedModels")]
+    partial class RenamedModels
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace cosmosdb_test.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("cosmosdb_test.Models.PlayedGame", b =>
+            modelBuilder.Entity("cosmosdb_test.Repositories.Models.CompletedGameState", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -41,7 +41,7 @@ namespace cosmosdb_test.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PlayedGame", (string)null);
+                    b.ToTable("CompletedGameStates", (string)null);
                 });
 #pragma warning restore 612, 618
         }

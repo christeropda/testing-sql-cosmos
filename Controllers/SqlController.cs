@@ -1,6 +1,7 @@
 ﻿using cosmosdb_test.Dto;
 using cosmosdb_test.Interfaces;
-using cosmosdb_test.Models;
+using cosmosdb_test.Repositories.Interfaces;
+using cosmosdb_test.Repositories.Models;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,14 +14,14 @@ public class SqlController : Controller
     private readonly ILogger<SqlController> _logger;
     private readonly IMapper _mapper;
     private readonly IGameState _gameState;
-    private readonly ISqlPlayedGameService _playedGameService;
+    private readonly ISqlRepository _repository;
 
-    public SqlController(ILogger<SqlController> logger, IMapper mapper, IGameState gamestate, ISqlPlayedGameService playedGameService)
+    public SqlController(ILogger<SqlController> logger, IMapper mapper, IGameState gamestate, ISqlRepository playedGameService)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _gameState = gamestate ?? throw new ArgumentNullException(nameof(gamestate));
-        _playedGameService = playedGameService ?? throw new ArgumentNullException(nameof(playedGameService));
+        _repository = playedGameService ?? throw new ArgumentNullException(nameof(playedGameService));
     }
 
     [HttpGet]
@@ -39,14 +40,14 @@ public class SqlController : Controller
             _gameState.EvaluateWinner(playerMove);
             _logger.LogInformation($"Evaluated match: {_gameState.PlayerMove.ToString()} {_gameState.MatchResult.ToString()}");
 
-            PlayedGame? playedGame = await _playedGameService.AddAsync(_mapper.Map<PlayedGame>(_gameState));
-            if (playedGame == null)
+            CompletedGameState? completedGame = await _repository.AddAsync(_mapper.Map<CompletedGameState>(_gameState));
+            if (completedGame == null)
             {
                 _logger.LogError("could not store game to DB");
                 return StatusCode(500, "Kunne ikke large til database");
             }
 
-            return new JsonResult(_mapper.Map<GameStateDto>(playedGame));
+            return new JsonResult(_mapper.Map<CompletedGameStateDto>(completedGame));
         }
         catch (ArgumentNullException ex)
         {
@@ -70,8 +71,8 @@ public class SqlController : Controller
     {
         try
         {
-            IEnumerable<PlayedGame> games = await _playedGameService.GetAllAsync();
-            GameStatisticsDto statistics = new GameStatisticsDto(games);
+            IEnumerable<CompletedGameState> completedGames = await _repository.GetAllAsync();
+            CompletedGameStatisticsDto statistics = new CompletedGameStatisticsDto(completedGames);
 
             return new JsonResult(statistics);
         }

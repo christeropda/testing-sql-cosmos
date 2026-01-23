@@ -1,6 +1,6 @@
 ﻿namespace cosmosdb_test.Dto;
 
-public class GameStateDto
+public class CompletedGameStateDto
 {
     public string? MachineMove { get; set; }
     public string? PlayerMove { get; set; }

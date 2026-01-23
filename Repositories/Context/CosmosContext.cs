@@ -1,20 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using cosmosdb_test.Repositories.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace cosmosdb_test.Models.Context;
+namespace cosmosdb_test.Repositories.Context;
 
-public class GameContextCosmos : DbContext
+public class CosmosContext : DbContext
 {
-    public GameContextCosmos(DbContextOptions<GameContextCosmos> options) : base(options)
+    public CosmosContext(DbContextOptions<CosmosContext> options) : base(options)
     {
     }
 
-    public DbSet<PlayedGame> PlayedGames { get; set; }
+    public DbSet<CompletedGameState> CompletedGameStates { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<PlayedGame>(entity =>
+        modelBuilder.Entity<CompletedGameState>(entity =>
         {
-            entity.ToContainer("PlayedGame").HasPartitionKey(pg => pg.Id);
+            entity.ToContainer("CompletedGameStates").HasPartitionKey(pg => pg.Id);
             entity.Property(pg => pg.Id).HasConversion<string>().ToJsonProperty("id");
             entity.HasNoDiscriminator();
 

@@ -1,21 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using cosmosdb_test.Repositories.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace cosmosdb_test.Models.Context;
+namespace cosmosdb_test.Repositories.Context;
 
 
-public class GameContextSql : DbContext
+public class SqlContext : DbContext
 {
-    public GameContextSql(DbContextOptions<GameContextSql> options) : base(options)
+    public SqlContext(DbContextOptions<SqlContext> options) : base(options)
     {
     }
 
-    public DbSet<PlayedGame> PlayedGames { get; set; }
+    public DbSet<CompletedGameState> CompletedGameStates { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<PlayedGame>(entity =>
+        modelBuilder.Entity<CompletedGameState>(entity =>
         {
-            entity.ToTable("PlayedGame");
+            entity.ToTable("CompletedGameStates");
             
             entity.HasKey(pg => pg.Id);
 

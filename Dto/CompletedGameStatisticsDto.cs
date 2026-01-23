@@ -1,9 +1,9 @@
 ﻿using cosmosdb_test.Enums;
-using cosmosdb_test.Models;
+using cosmosdb_test.Repositories.Models;
 
 namespace cosmosdb_test.Dto;
 
-public class GameStatisticsDto
+public class CompletedGameStatisticsDto
 {
     public int Rock         { get; private set; }
     public int Paper        { get; private set; }
@@ -12,12 +12,12 @@ public class GameStatisticsDto
     public int MachineWin   { get; private set; }
     public int Draw         { get; private set; }
 
-    public GameStatisticsDto(IEnumerable<PlayedGame> games)
+    public CompletedGameStatisticsDto(IEnumerable<CompletedGameState> completedGames)
     {
 
-        if (games is null) throw new ArgumentNullException(nameof(games));
+        if (completedGames is null) throw new ArgumentNullException(nameof(completedGames));
 
-        foreach (var game in games)
+        foreach (var game in completedGames)
         {
             AddMove(game.PlayerMove, game.MachineMove);
             AddWinner(game.MatchResult);
@@ -49,7 +49,7 @@ public class GameStatisticsDto
         switch (state)
         {
             case Result.SpillerVinner: PlayerWin += 1; break;
-            case Result.MaskinVinner: PlayerWin += 1; break;
+            case Result.MaskinVinner: MachineWin += 1; break;
             case Result.Uavgjort: Draw += 1; break;
             default: throw new ArgumentOutOfRangeException(nameof(state));
         }
